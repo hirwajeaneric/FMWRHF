@@ -1,17 +1,10 @@
 import { ApplyFormInputTypes } from '@/types/applyFormTypes';
-import { useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 export const inputStyles = 'rounded-md border-2 border-slate-600 py-1 px-3 text-slate-600';
 
 const ApplyLoanForm = () => {
-    const navigate = useNavigate();
-    useEffect(() => {
-        console.log(Number(window.location.pathname.split('/')[1]));
-        
-    }, []);
-
     const methods = useForm<ApplyFormInputTypes>({
         defaultValues: {
             "First name": "John",
@@ -43,11 +36,6 @@ const ApplyLoanForm = () => {
             <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
                     <Outlet />
-                    <div className='flex justify-between items-center'>
-                        {window.location.pathname.split('/')[1] === '1' ? <></> : <button type='button' className='text-white bg-slate-800 py-2 px-4 rounded-md' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1])-1}`)}>Previous</button>}
-                        {window.location.pathname.split('/')[1] === '4' ? <></> : <button type='button' className='text-white bg-slate-800 py-2 px-4 rounded-md' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1])+1}`)}>Next</button>}
-                        {window.location.pathname.split('/')[1] === '4' && <input type="submit" className='text-white bg-slate-800 py-2 px-4 rounded-md cursor-pointer' />}
-                    </div>
                 </form>
             </FormProvider>
         </div>

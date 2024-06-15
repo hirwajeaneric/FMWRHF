@@ -1,10 +1,14 @@
 import { useFormContext } from "react-hook-form";
 import { inputStyles } from "./ApplyLoanForm";
+import { useState } from "react";
+import MultiStepFormControls from "@/components/others/MultiStepFormControls";
 
 const Work = () => {
     const formMethods = useFormContext();
-    const { register, setValue } = formMethods;
-
+    const { register, setValue, getValues } = formMethods;
+    const currentPage = window.location.pathname.split('/')[1];
+    const [valid, setValid] = useState(false);
+    
     return (
         <div className="flex flex-col gap-2">
             <h2 className='text-2xl font-bold'>Work and dependencies</h2>
@@ -51,11 +55,20 @@ const Work = () => {
                                 const file = event.target.files[0];
                                 console.log(file.name);
                                 setValue("Work contract", file.filename);
+                                
+                                if (getValues("Work contract") !== '' && getValues("Work school") !== '' && getValues("Position") !== '' && getValues("Number of dependencies") !== '') {
+                                    setValid(true);
+                                } else {
+                                    setValid(false)
+                                }
                             },
                         }
                     )
                     }
                 />
+            </div>
+            <div className='flex justify-between items-center'>
+                <MultiStepFormControls currentPage={currentPage} valid={valid} />
             </div>
         </div>
     )
