@@ -1,3 +1,4 @@
+import { Form } from '@/components/ui/form';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 import { z } from 'zod';
@@ -84,9 +85,11 @@ const ApplyLoanForm = () => {
     return (
         <div className='flex flex-col items-center w-full bg-white'>
             <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
-                    <Outlet />
-                </form>
+                <Form {...methods}>
+                    <form onSubmit={methods.handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+                        <Outlet />
+                    </form>
+                </Form>
             </FormProvider>
         </div>
     );
