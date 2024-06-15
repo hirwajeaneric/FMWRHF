@@ -1,11 +1,61 @@
-import { ApplyFormInputTypes } from '@/types/applyFormTypes';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
+import { z } from 'zod';
 
 export const inputStyles = 'rounded-md border-2 border-slate-600 py-1 px-3 text-slate-600';
 
+const formSchema = z.object({
+    "First name": z.string({
+        required_error: 'First name is required',
+    }),
+    "Last name": z.string({
+        required_error: 'Last name is required',
+    }),
+    "Email": z.string({
+        required_error: 'Email is required',
+    }).email({
+        message: 'Invalid email',
+    }),
+    "Mobile number": z.string({
+        required_error: 'Mobile number is required',
+        description: 'Must be in the format 07xxxxxxxx',
+    }),
+    "Position": z.enum(["Teacher", "School Director", "Other"]),
+    "Marital Status": z.enum(["Single", "Married", "Divorced", "Widowed"]),
+    "Gender": z.enum(["Male", "Female", "Other"]),
+    "National Id": z.string({
+        required_error: 'National Id is required',
+    }),
+    "Date of birth": z.date({
+        required_error: 'Date of birth is required',
+    }),
+    "Number of dependencies": z.number({
+        required_error: 'Number of dependencies is required',
+    }),
+    "Work school": z.string({
+        required_error: 'Work school is required',
+    }),
+    "Monthly salary": z.number({
+        required_error: 'Monthly salary is required',
+    }),
+    "Amount requested": z.number({
+        required_error: 'Amount requested is required',
+    }),
+    "Repayment period": z.number({
+        required_error: 'Repayment period is required',
+    }),
+    "Bank account number": z.string({
+        required_error: 'Bank account number is required',
+    }),
+    "Work contract": z.string({
+        required_error: 'Work contract is required',
+    }),
+});
+
+export type ApplyFormDataTypes = z.infer<typeof formSchema>;
+
 const ApplyLoanForm = () => {
-    const methods = useForm<ApplyFormInputTypes>({
+    const methods = useForm<ApplyFormDataTypes>({
         defaultValues: {
             "First name": "John",
             "Last name": "Doe",
@@ -26,7 +76,7 @@ const ApplyLoanForm = () => {
         },
     });
 
-    const onSubmit = async (data: ApplyFormInputTypes) => {
+    const onSubmit = async (data: ApplyFormDataTypes) => {
         console.log(data);
         console.log(methods.formState.errors);
     }
