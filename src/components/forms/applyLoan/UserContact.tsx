@@ -1,13 +1,28 @@
 import { useFormContext } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import MultiStepFormControls from "@/components/others/MultiStepFormControls";
+import { useEffect, useState } from "react";
 
 const UserInfo = () => {
     const formMethods = useFormContext();
-    const navigate = useNavigate();
+    const currentPage = window.location.pathname.split('/')[1];
     
+    const [valid, setValid] = useState(false);
+    const { getValues } = formMethods;
+
+    const areAllInputFilled = () => {
+        if (getValues("First name")!== '' && getValues("Last name")!== '' && getValues("Email")!== '' && getValues("Mobile number")!== '') {
+            setValid(true);
+        } else {
+            setValid(false)
+        }
+    }
+
+    useEffect(() => {
+        areAllInputFilled();
+    });
+
     return (
         <div className="flex flex-col gap-2">
             <h2 className='text-2xl font-bold'>Contact Information</h2>
@@ -16,11 +31,11 @@ const UserInfo = () => {
             </FormDescription>
 
             <div className='flex flex-col gap-1'>
-                <FormField 
+                <FormField
                     control={formMethods.control}
                     name="First name"
-                    render={({ field}) => (
-                        <FormItem>
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
                             <FormLabel>First name</FormLabel>
                             <FormControl>
                                 <Input {...field} />
@@ -28,11 +43,11 @@ const UserInfo = () => {
                         </FormItem>
                     )}
                 />
-                <FormField 
+                <FormField
                     control={formMethods.control}
                     name="Last name"
-                    render={({ field}) => (
-                        <FormItem>
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
                             <FormLabel>Last name</FormLabel>
                             <FormControl>
                                 <Input {...field} />
@@ -40,11 +55,11 @@ const UserInfo = () => {
                         </FormItem>
                     )}
                 />
-                <FormField 
+                <FormField
                     control={formMethods.control}
                     name="Email"
-                    render={({ field}) => (
-                        <FormItem>
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
                                 <Input {...field} />
@@ -52,23 +67,24 @@ const UserInfo = () => {
                         </FormItem>
                     )}
                 />
-                <FormField 
+                <FormField
                     control={formMethods.control}
                     name="Mobile number"
-                    render={({ field}) => (
-                        <FormItem>
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
                             <FormLabel>Mobile number</FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder="0722123456" />
+                                <Input
+                                    {...field}
+                                    maxLength={10}
+                                    placeholder="Use format 07xxxxxxxx" />
                             </FormControl>
                         </FormItem>
                     )}
-                />                
+                />
             </div>
             <div className='flex justify-between items-center'>
-                {window.location.pathname.split('/')[1] === '1' ? <></> : <Button type='button' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1]) - 1}`)}>Previous</Button>}
-                {window.location.pathname.split('/')[1] === '4' ? <></> : <Button type='button' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1]) + 1}`)}>Next</Button>}
-                {window.location.pathname.split('/')[1] === '4' && <input type="submit" className='text-white bg-slate-800 py-2 px-4 rounded-md cursor-pointer' />}
+                <MultiStepFormControls currentPage={currentPage} valid={valid} />
             </div>
         </div>
     )

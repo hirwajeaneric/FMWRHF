@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import { Button } from "../ui/button";
 
 type Props = {
     currentPage: string;
@@ -11,29 +12,28 @@ const MultiStepFormControls = ({ currentPage, valid }: Props) => {
         <>
             {currentPage === '1'
                 ? <></>
-                : <button
+                : <Button
                     type='button'
-                    className='text-white bg-slate-800 py-2 px-4 rounded-md'
                     onClick={() => navigate(`/${Number(currentPage) - 1}`)}>
                     Previous
-                </button>
+                </Button>
             }
             {currentPage === '4'
                 ? <></>
-                : <button
+                : <Button
                     type='button'
                     disabled={!valid}
-                    className='text-white bg-slate-800 py-2 px-4 rounded-md disabled:bg-slate-600'
                     onClick={() => navigate(`/${Number(currentPage) + 1}`)}>
                     Next
-                </button>
+                </Button>
             }
             {currentPage === '4'
                 &&
-                <input
+                <Button
                     type="submit"
-                    className='text-white bg-slate-800 py-2 px-4 rounded-md cursor-pointer'
-                />
+                >
+                    Submit
+                </Button>
             }
         </>
     )
