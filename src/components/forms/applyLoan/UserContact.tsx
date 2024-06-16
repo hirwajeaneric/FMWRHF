@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 const UserInfo = () => {
     const formMethods = useFormContext();
     const currentPage = window.location.pathname.split('/')[1];
-    
+
     const [valid, setValid] = useState(false);
     const { getValues } = formMethods;
 
     const areAllInputFilled = () => {
-        if (getValues("First name")!== '' && getValues("Last name")!== '' && getValues("Email")!== '' && getValues("Mobile number")!== '') {
+        if (getValues("First name") !== '' && getValues("Last name") !== '' && getValues("Email") !== '' && getValues("Mobile number") !== '') {
             setValid(true);
         } else {
             setValid(false)
@@ -24,13 +24,15 @@ const UserInfo = () => {
     });
 
     return (
-        <div className="flex flex-col gap-2">
-            <h2 className='text-2xl font-bold'>Contact Information</h2>
-            <FormDescription>
-                Provide your contact information
-            </FormDescription>
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col">
+                <h2 className='text-2xl font-bold'>Contact Information</h2>
+                <FormDescription>
+                    Provide your contact information
+                </FormDescription>
+            </div>
 
-            <div className='flex flex-col gap-1'>
+            <div className='flex flex-col gap-2'>
                 <FormField
                     control={formMethods.control}
                     name="First name"

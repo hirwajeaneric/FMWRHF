@@ -30,6 +30,7 @@ const MultiStepFormControls = ({ currentPage, valid }: Props) => {
             {currentPage === '4'
                 &&
                 <Button
+                    disabled={!valid}
                     type="submit"
                 >
                     Submit

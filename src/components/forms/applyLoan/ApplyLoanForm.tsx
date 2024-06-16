@@ -42,8 +42,10 @@ const formSchema = z.object({
     "Amount requested": z.number({
         required_error: 'Amount requested is required',
     }),
-    "Repayment period": z.number({
+    "Repayment period": z.number(),
+    "Suggested repayment period": z.number({
         required_error: 'Repayment period is required',
+        coerce: true,
     }),
     "Bank account number": z.string({
         required_error: 'Bank account number is required',
@@ -51,6 +53,10 @@ const formSchema = z.object({
     "Work contract": z.string({
         required_error: 'Work contract is required',
     }),
+    "Copy of national id": z.string({
+        required_error: 'A copy of national id is required',
+    }),
+    "Comment": z.string({}),
 });
 
 export type ApplyFormDataTypes = z.infer<typeof formSchema>;
@@ -72,8 +78,11 @@ const ApplyLoanForm = () => {
             "Monthly salary": 0,
             "Amount requested": 0,
             "Repayment period": 0,
+            "Suggested repayment period": 0,
             "Bank account number": "",
             "Work contract": "",
+            "Copy of national id": "",
+            "Comment":""
         },
     });
 
