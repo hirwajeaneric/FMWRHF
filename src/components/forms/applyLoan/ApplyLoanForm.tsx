@@ -1,4 +1,5 @@
 import { Form } from '@/components/ui/form';
+import { calculatePaymentPeriod } from '@/utils/helperFunctions';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 import { z } from 'zod';
@@ -87,6 +88,9 @@ const ApplyLoanForm = () => {
     });
 
     const onSubmit = async (data: ApplyFormDataTypes) => {
+        const paymentPeriod = calculatePaymentPeriod(data['Amount requested'], data["Monthly salary"]);
+        data['Repayment period'] = paymentPeriod;
+        
         console.log(data);
         console.log(methods.formState.errors);
     }

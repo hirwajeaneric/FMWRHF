@@ -1,5 +1,4 @@
 import { useFormContext } from "react-hook-form";
-import { calculatePaymentPeriod } from "@/utils/helperFunctions";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -11,7 +10,7 @@ const LoanDetails = () => {
     const currentPage = window.location.pathname.split('/')[1];
 
     const [valid, setValid] = useState(false);
-    const { getValues, setValue } = formMethods;
+    const { getValues } = formMethods;
 
     const areAllInputFilled = () => {
         if (getValues("Bank account number") !== '' && getValues("Amount requested") !== '' && getValues("Monthly salary") !== '' && getValues("Suggested repayment period") !== '') {
@@ -50,17 +49,13 @@ const LoanDetails = () => {
                 <FormField
                     control={formMethods.control}
                     name="Amount requested"
-                    render={() => (
-                        <FormItem>
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
                             <FormLabel>Amount requested</FormLabel>
                             <FormControl>
                                 <Input
                                     type="number"
-                                    onChange={(event) => {
-                                        const paymentPeriod = calculatePaymentPeriod(Number(event.target.value), getValues("Monthly salary"));
-                                        setValue("Repayment period", paymentPeriod);
-                                        areAllInputFilled();
-                                    }}
+                                    {...field}
                                 />
                             </FormControl>
                         </FormItem>
