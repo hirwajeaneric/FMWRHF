@@ -1,71 +1,118 @@
 import { useFormContext } from "react-hook-form";
-import { inputStyles } from "./ApplyLoanForm";
-import { calculatePaymentPeriod } from "@/utils/helperFunctions";
-import { useNavigate } from "react-router-dom";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import MultiStepFormControls from "@/components/others/MultiStepFormControls";
+import { Textarea } from "@/components/ui/textarea";
 
 const LoanDetails = () => {
     const formMethods = useFormContext();
-    const navigate = useNavigate();
-    const { register, setValue, getValues } = formMethods;
+    const currentPage = window.location.pathname.split('/')[1];
+
+    const [valid, setValid] = useState(false);
+    const { getValues } = formMethods;
+
+    const areAllInputFilled = () => {
+        if (getValues("Bank account number") !== '' && getValues("Amount requested") !== '' && getValues("Monthly salary") !== '' && getValues("Suggested repayment period") !== '') {
+            setValid(true);
+        } else {
+            setValid(false)
+        }
+    }
+
+    useEffect(() => {
+        areAllInputFilled();
+    });
 
     return (
-        <div className="flex flex-col gap-2">
-            <h2 className='text-2xl font-bold'>Contact Information</h2>
-            <div className='flex flex-col gap-1'>
-                <label htmlFor="Monthly salary">Monthly salary</label>
-                <input
-                    id='Monthly salary'
-                    className={inputStyles}
-                    type="number"
-                    placeholder="Monthly salary"
-                    {...register("Monthly salary", { required: true, min: 100000 })}
+        <div className="flex flex-col gap-3">
+            <div className="flex flex-col">
+                <h2 className='text-2xl font-bold'>Loan details</h2>
+                <FormDescription>
+                    Provide more details about your salary and the loan you are applying for.
+                </FormDescription>
+            </div>
+            <div className='flex flex-col gap-2'>
+                <FormField
+                    control={formMethods.control}
+                    name="Monthly salary"
+                    render={({ field }) => (
+                        <FormItem  onChange={areAllInputFilled}>
+                            <FormLabel>Monthly salary</FormLabel>
+                            <FormControl>
+                                <Input type="number" {...field} />
+                            </FormControl>
+                        </FormItem>
+                    )}
                 />
 
-                <label htmlFor="Amount requested">Amount requested</label>
-                <input
-                    id='Amount requested'
-                    className={inputStyles}
-                    type="number"
-                    placeholder="Amount requested"
-                    {
-                    ...register(
-                        "Amount requested",
-                        {
-                            required: true,
-                            max: 5000000,
-                            min: 100000,
-                            onChange(event) {
-                                const paymentPeriod = calculatePaymentPeriod(event.target.value, getValues("Monthly salary"));
-                                setValue("Repayment period", paymentPeriod);
-                            },
-                        }
-                    )
-                    }
+                <FormField
+                    control={formMethods.control}
+                    name="Amount requested"
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
+                            <FormLabel>Amount requested</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="number"
+                                    {...field}
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
                 />
 
-
-                <label htmlFor="Repayment perid">Repayment period</label>
-                <input
-                    id='Repayment perid'
-                    className={inputStyles}
-                    type="number"
-                    placeholder="Repayment period"
-                    {...register("Repayment period", { required: true, max: 15, min: 2 })}
+                <FormField
+                    control={formMethods.control}
+                    name="Suggested repayment period"
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
+                            <FormLabel>Suggested repayment period</FormLabel>
+                            <FormControl>
+                                <Input type="number" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                This is the suggested repayment period based on your monthly salary or other income.
+                            </FormDescription>
+                        </FormItem>
+                    )}
                 />
 
-                <label htmlFor="Bank account number">Bank account number</label>
-                <input
-                    id='Bank account number'
-                    className={inputStyles}
-                    type="text"
-                    placeholder="Bank account number"
-                    {...register("Bank account number", { required: true })}
+                <FormField
+                    control={formMethods.control}
+                    name="Bank account number"
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
+                            <FormLabel>Bank account number</FormLabel>
+                            <FormControl>
+                                <Input {...field} />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={formMethods.control}
+                    name="Comment"
+                    render={({ field }) => (
+                        <FormItem onChange={areAllInputFilled}>
+                            <FormLabel>Your comment</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Tell us a little bit about yourself"
+                                    className="resize-none"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                Do you have any suggestion or query, don't hesitate to let us know.
+                            </FormDescription>
+                        </FormItem>
+                    )}
                 />
             </div>
             <div className='flex justify-between items-center'>
-                {window.location.pathname.split('/')[1] === '1' ? <></> : <button type='button' className='text-white bg-slate-800 py-2 px-4 rounded-md' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1]) - 1}`)}>Previous</button>}
-                {window.location.pathname.split('/')[1] === '4' ? <></> : <button type='button' className='text-white bg-slate-800 py-2 px-4 rounded-md' onClick={() => navigate(`/${Number(window.location.pathname.split('/')[1]) + 1}`)}>Next</button>}
-                {window.location.pathname.split('/')[1] === '4' && <input type="submit" className='text-white bg-slate-800 py-2 px-4 rounded-md cursor-pointer' />}
+                <MultiStepFormControls currentPage={currentPage} valid={valid} />
             </div>
         </div>
     )
